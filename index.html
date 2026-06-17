@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard PASI — Fase II</title>
+<title>Dashboard PASI - Fase II</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -53,6 +53,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
 .sem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:20px}
 .sem-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s;cursor:default}
 .sem-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.07)}
+.sem-card-click{cursor:pointer}
+.sem-hint{font-size:10px;color:var(--text3);margin-top:2px}
 .sem-card-top{display:flex;align-items:center;justify-content:space-between}
 .sem-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px}
 .sem-badge.verde{background:var(--green-bg);color:var(--green-text)}
@@ -147,7 +149,7 @@ select:focus{outline:none;border-color:var(--blue)}
 
 /* track column */
 .tl-tracks-col{flex:1;position:relative;min-width:0;display:flex;flex-direction:column}
-/* TODAY — contained 100% inside tl-tracks-col */
+/* TODAY - contained 100% inside tl-tracks-col */
 .tl-now-col{position:absolute;top:0;bottom:0;width:2px;background:var(--red);z-index:20;pointer-events:none}
 .tl-now-badge{position:absolute;top:2px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:3px 7px;border-radius:5px;white-space:nowrap;line-height:1.4;text-align:center;box-shadow:0 2px 8px rgba(163,45,45,.35)}
 .tl-now-badge::after{content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--red);border-bottom:none}
@@ -270,13 +272,13 @@ select:focus{outline:none;border-color:var(--blue)}
 <div class="header">
   <div>
     <p style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Programa · Acompanhamento</p>
-    <h1>PASI — Fase II</h1>
+    <h1>PASI - Fase II</h1>
     <p>Implantação Atendimento Receptivo · Opção 1 Comercial</p>
   </div>
   <div class="header-right">
     <span>Última atualização</span>
     <strong id="hdate"></strong>
-    <span style="margin-top:4px;display:block">Próx. checkpoint: 10/06/2026</span>
+    <span style="margin-top:4px;display:block">Próx. checkpoint: 30/06/2026</span>
   </div>
 </div>
 
@@ -306,44 +308,47 @@ select:focus{outline:none;border-color:var(--blue)}
 <!-- EXECUTIVA -->
 <div id="page-exec" class="page active">
   <div class="cards">
-    <div class="card" id="card-geral"><p class="card-label">% Concluído geral</p><p class="card-val blue" id="cnt-geral">—</p><div class="prog-bar"><div class="prog-fill" id="prog-geral" style="width:0%"></div></div></div>
-    <div class="card card-click" onclick="openCardModal('concluidas')" title="Ver tarefas concluídas"><p class="card-label">Tarefas concluídas</p><p class="card-val green" id="cnt-concluidas">—</p><p class="card-hint">ver tarefas ↗</p></div>
-    <div class="card card-click" onclick="openCardModal('andamento')" title="Ver tarefas em andamento"><p class="card-label">Em andamento</p><p class="card-val amber" id="cnt-andamento">—</p><p class="card-hint">ver tarefas ↗</p></div>
-    <div class="card card-click" onclick="openCardModal('futuras')" title="Ver tarefas futuras"><p class="card-label">Tarefas futuras</p><p class="card-val" id="cnt-futuras" style="color:var(--text2)">—</p><p class="card-hint">ver tarefas ↗</p></div>
-    <div class="card card-click" onclick="openCardModal('atrasadas')" title="Ver tarefas atrasadas"><p class="card-label">Atrasadas</p><p class="card-val red" id="cnt-atrasadas">—</p><p class="card-hint">ver tarefas ↗</p></div>
-    <div class="card"><p class="card-label">Término previsto</p><p class="card-val" style="font-size:17px;margin-top:4px">23/10/26</p></div>
+    <div class="card" id="card-geral"><p class="card-label">% Concluído geral</p><p class="card-val blue" id="cnt-geral">-</p><div class="prog-bar"><div class="prog-fill" id="prog-geral" style="width:0%"></div></div></div>
+    <div class="card card-click" onclick="openCardModal('concluidas')" title="Ver tarefas concluídas"><p class="card-label">Tarefas concluídas</p><p class="card-val green" id="cnt-concluidas">-</p><p class="card-hint">ver tarefas ↗</p></div>
+    <div class="card card-click" onclick="openCardModal('andamento')" title="Ver tarefas em andamento"><p class="card-label">Em andamento</p><p class="card-val amber" id="cnt-andamento">-</p><p class="card-hint">ver tarefas ↗</p></div>
+    <div class="card card-click" onclick="openCardModal('futuras')" title="Ver tarefas futuras"><p class="card-label">Tarefas futuras</p><p class="card-val" id="cnt-futuras" style="color:var(--text2)">-</p><p class="card-hint">ver tarefas ↗</p></div>
+    <div class="card card-click" onclick="openCardModal('atrasadas')" title="Ver tarefas atrasadas"><p class="card-label">Atrasadas</p><p class="card-val red" id="cnt-atrasadas">-</p><p class="card-hint">ver tarefas ↗</p></div>
+    <div class="card"><p class="card-label">Término previsto</p><p class="card-val" style="font-size:17px;margin-top:4px">07/12/26</p></div>
   </div>
 
-  <p class="section-title">Saúde do projeto — por pilar</p>
+  <p class="section-title">Saúde do projeto - por pilar</p>
   <div class="sem-grid">
-    <div class="sem-card">
+    <div class="sem-card sem-card-click" onclick="openPhaseModal('Ideação')" title="Ver tarefas da Fase Ideação">
       <div class="sem-card-top">
         <span class="sem-name">Fase Ideação</span>
         <span class="sem-badge verde"><span class="dot verde"></span>No prazo</span>
       </div>
-      <p class="sem-pct" style="color:var(--green)">93%</p>
-      <p class="sem-sub">13 de 19 tarefas concluídas</p>
-      <div class="sem-prog"><div class="sem-prog-fill verde" style="width:93%"></div></div>
+      <p class="sem-pct" style="color:var(--green)">88%</p>
+      <p class="sem-sub">15 de 18 tarefas concluídas</p>
+      <div class="sem-prog"><div class="sem-prog-fill verde" style="width:88%"></div></div>
+      <p class="sem-hint">ver tarefas ↗</p>
     </div>
-    <div class="sem-card">
+    <div class="sem-card sem-card-click" onclick="openPhaseModal('Telefonia')" title="Ver tarefas da Migração Telefonia">
       <div class="sem-card-top">
         <span class="sem-name">Migração Telefonia</span>
         <span class="sem-badge amarelo"><span class="dot amarelo"></span>Atenção</span>
       </div>
-      <p class="sem-pct" style="color:var(--amber)">85%</p>
+      <p class="sem-pct" style="color:var(--amber)">74%</p>
       <p class="sem-sub">1 risco ativo · 2 tarefas abertas</p>
-      <div class="sem-prog"><div class="sem-prog-fill amarelo" style="width:85%"></div></div>
+      <div class="sem-prog"><div class="sem-prog-fill amarelo" style="width:74%"></div></div>
+      <p class="sem-hint">ver tarefas ↗</p>
     </div>
-    <div class="sem-card">
+    <div class="sem-card sem-card-click" onclick="openPhaseModal('Planejamento')" title="Ver tarefas da Fase Planejamento">
       <div class="sem-card-top">
         <span class="sem-name">Fase Planejamento</span>
         <span class="sem-badge vermelho"><span class="dot vermelho"></span>Não iniciada</span>
       </div>
       <p class="sem-pct" style="color:var(--red)">0%</p>
-      <p class="sem-sub">Início previsto 11/06/26</p>
+      <p class="sem-sub">Início previsto 01/07/26</p>
       <div class="sem-prog"><div class="sem-prog-fill vermelho" style="width:0%"></div></div>
+      <p class="sem-hint">ver tarefas ↗</p>
     </div>
-    <div class="sem-card">
+    <div class="sem-card sem-card-click" onclick="openPhaseModal('Execução')" title="Ver tarefas da Fase Execução">
       <div class="sem-card-top">
         <span class="sem-name">Fase Execução</span>
         <span class="sem-badge vermelho"><span class="dot vermelho"></span>Não iniciada</span>
@@ -351,24 +356,27 @@ select:focus{outline:none;border-color:var(--blue)}
       <p class="sem-pct" style="color:var(--red)">0%</p>
       <p class="sem-sub">Aguarda pré-requisitos</p>
       <div class="sem-prog"><div class="sem-prog-fill vermelho" style="width:0%"></div></div>
+      <p class="sem-hint">ver tarefas ↗</p>
     </div>
-    <div class="sem-card">
+    <div class="sem-card sem-card-click" onclick="openPhaseModal('Implantação')" title="Ver tarefas da Fase Implantação">
       <div class="sem-card-top">
         <span class="sem-name">Fase Implantação</span>
         <span class="sem-badge vermelho"><span class="dot vermelho"></span>Não iniciada</span>
       </div>
       <p class="sem-pct" style="color:var(--red)">0%</p>
-      <p class="sem-sub">Início previsto 17/08/26</p>
+      <p class="sem-sub">Início previsto 29/09/26</p>
       <div class="sem-prog"><div class="sem-prog-fill vermelho" style="width:0%"></div></div>
+      <p class="sem-hint">ver tarefas ↗</p>
     </div>
-    <div class="sem-card">
+    <div class="sem-card sem-card-click" onclick="openPhaseModal('Encerramento')" title="Ver tarefas da Fase Encerramento">
       <div class="sem-card-top">
         <span class="sem-name">Fase Encerramento</span>
         <span class="sem-badge vermelho"><span class="dot vermelho"></span>Não iniciada</span>
       </div>
       <p class="sem-pct" style="color:var(--red)">0%</p>
-      <p class="sem-sub">Início previsto 09/09/26</p>
+      <p class="sem-sub">Início previsto 22/10/26</p>
       <div class="sem-prog"><div class="sem-prog-fill vermelho" style="width:0%"></div></div>
+      <p class="sem-hint">ver tarefas ↗</p>
     </div>
   </div>
 
@@ -384,13 +392,12 @@ select:focus{outline:none;border-color:var(--blue)}
     <div class="panel">
       <p class="section-title">Próximos marcos (30 dias)</p>
       <table>
-        <thead><tr><th>Marco</th><th>Data</th><th>Responsável</th></tr></thead>
+        <thead><tr><th>Marco</th><th>Data</th><th>Responsável</th><th>Status</th></tr></thead>
         <tbody>
-          <tr><td>◆ Escopo Aprovado</td><td style="white-space:nowrap">10/06/26</td><td style="font-size:11px">Concept + PASI</td></tr>
-          <tr><td>◆ TAP Encaminhada</td><td style="white-space:nowrap">12/06/26</td><td style="font-size:11px">Rodrigo Castro</td></tr>
-          <tr><td>◆ Tel. PASI Migrada</td><td style="white-space:nowrap">26/06/26</td><td style="font-size:11px">Mateus Ribeiro</td></tr>
-          <tr><td>◆ Desenho Funcional OK</td><td style="white-space:nowrap">30/06/26</td><td style="font-size:11px">Rodrigo Castro</td></tr>
-          <tr><td>◆ Dashboard OK</td><td style="white-space:nowrap">07/07/26</td><td style="font-size:11px">Concept + PASI</td></tr>
+          <tr><td>◆ Escopo Aprovado</td><td style="white-space:nowrap">10/06/26</td><td style="font-size:11px">Concept + PASI</td><td><span class="badge b-green">Concluído</span></td></tr>
+          <tr><td>◆ Kick-off do Projeto</td><td style="white-space:nowrap">30/06/26</td><td style="font-size:11px">Rodrigo Castro</td><td><span class="badge b-gray">Tarefa futura</span></td></tr>
+          <tr><td>◆ TAP Encaminhada</td><td style="white-space:nowrap">01/07/26</td><td style="font-size:11px">Rodrigo Castro</td><td><span class="badge b-gray">Tarefa futura</span></td></tr>
+          <tr><td>◆ Desenho Funcional OK</td><td style="white-space:nowrap">20/07/26</td><td style="font-size:11px">Rodrigo Castro</td><td><span class="badge b-gray">Tarefa futura</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -398,11 +405,11 @@ select:focus{outline:none;border-color:var(--blue)}
 
   <div class="panel tl-panel" style="margin-top:14px">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:14px">
-      <p class="section-title" style="margin:0">Timeline executiva — jan a out 2026</p>
+      <p class="section-title" style="margin:0">Timeline executiva - jan a dez 2026</p>
       <div style="display:flex;gap:10px;font-size:11px;color:var(--text2);flex-wrap:wrap">
         <span>⏱ Início: <strong>09/01/26</strong></span>
-        <span>🏁 Término: <strong>23/10/26</strong></span>
-        <span>📅 206 dias úteis</span>
+        <span>🏁 Término: <strong>07/12/26</strong></span>
+        <span>📅 332 dias corridos</span>
       </div>
     </div>
 
@@ -423,6 +430,8 @@ select:focus{outline:none;border-color:var(--blue)}
           <div class="tl-mg-month">Ago</div>
           <div class="tl-mg-month">Set</div>
           <div class="tl-mg-month">Out</div>
+          <div class="tl-mg-month">Nov</div>
+          <div class="tl-mg-month">Dez</div>
         </div>
       </div>
 
@@ -431,8 +440,8 @@ select:focus{outline:none;border-color:var(--blue)}
 
         <!-- LEFT: phase labels -->
         <div class="tl-labels-col">
-          <div class="tl-lrow"><span class="tl-plabel-name">Ideação</span><span class="tl-plabel-pct verde">93%</span></div>
-          <div class="tl-lrow"><span class="tl-plabel-name">Migr. Tel.</span><span class="tl-plabel-pct amarelo">85%</span></div>
+          <div class="tl-lrow"><span class="tl-plabel-name">Ideação</span><span class="tl-plabel-pct verde">88%</span></div>
+          <div class="tl-lrow"><span class="tl-plabel-name">Migr. Tel.</span><span class="tl-plabel-pct amarelo">74%</span></div>
           <div class="tl-lrow"><span class="tl-plabel-name">Planejamento</span><span class="tl-plabel-pct cinza">0%</span></div>
           <div class="tl-lrow"><span class="tl-plabel-name">Execução</span><span class="tl-plabel-pct cinza">0%</span></div>
           <div class="tl-lrow"><span class="tl-plabel-name">Implantação</span><span class="tl-plabel-pct cinza">0%</span></div>
@@ -443,78 +452,84 @@ select:focus{outline:none;border-color:var(--blue)}
         <!-- RIGHT: all tracks + today line overlay -->
         <div class="tl-tracks-col">
 
-          <!-- TODAY LINE — contained inside track column, 100% height -->
-          <div class="tl-now-col" style="left:50.5%">
-            <div class="tl-now-badge">Hoje<br><span style="font-weight:400;font-size:8px">03/06/26</span></div>
+          <!-- TODAY LINE - contained inside track column, 100% height -->
+          <div class="tl-now-col" style="left:47.9%">
+            <div class="tl-now-badge">Hoje<br><span style="font-weight:400;font-size:8px">17/06/26</span></div>
           </div>
 
           <!-- Phase bands -->
           <div class="tl-brow">
-            <div class="tl-planned" style="left:0%;width:53.7%"></div>
-            <div class="tl-fill verde" style="left:0%;width:49.9%" title="93% concluído">
-              <span class="tl-fill-label">Ideação · Jan–Jun · 93%</span>
+            <div class="tl-planned" style="left:0%;width:52.1%"></div>
+            <div class="tl-fill verde" style="left:0%;width:45.8%" title="88% concluído">
+              <span class="tl-fill-label">Ideação · Jan–Jul · 88%</span>
             </div>
           </div>
           <div class="tl-brow">
-            <div class="tl-planned" style="left:0%;width:58.5%"></div>
-            <div class="tl-fill amarelo" style="left:0%;width:49.7%" title="85% concluído">
-              <span class="tl-fill-label">Migração Telefonia · Jan–Jun · 85%</span>
+            <div class="tl-planned" style="left:0%;width:59.0%"></div>
+            <div class="tl-fill amarelo" style="left:0%;width:43.7%" title="74% concluído">
+              <span class="tl-fill-label">Migração Telefonia · Jan–Jul · 74%</span>
             </div>
           </div>
           <div class="tl-brow">
-            <div class="tl-planned" style="left:53.3%;width:6.6%" title="Jun 11–30"></div>
+            <div class="tl-planned" style="left:52.1%;width:5.7%" title="Jul 01–20"></div>
           </div>
           <div class="tl-brow">
-            <div class="tl-planned" style="left:55.4%;width:21.6%" title="Jun 17–Ago 18"></div>
+            <div class="tl-planned" style="left:59.9%;width:19.0%" title="Jul 27–Set 28"></div>
           </div>
           <div class="tl-brow">
-            <div class="tl-planned" style="left:76.7%;width:7.7%" title="Ago 17–Set 08"></div>
+            <div class="tl-planned" style="left:79.2%;width:6.6%" title="Set 29–Out 21"></div>
           </div>
           <div class="tl-brow">
-            <div class="tl-planned" style="left:84.7%;width:15.3%" title="Set 09–Out 23"></div>
+            <div class="tl-planned" style="left:86.1%;width:13.9%" title="Out 22–Dez 07"></div>
           </div>
 
           <!-- Marco row A (above) -->
           <div class="tl-brow tl-brow-marco">
-            <div class="tl-marco tl-marco-a" style="left:53.0%">
+            <div class="tl-marco tl-marco-a" style="left:45.8%">
               <span class="tl-mlabel">Escopo</span>
               <span class="tl-mdate">10/06</span>
               <div class="tl-diamond breve"></div>
               <div class="tl-marco-stem"></div>
             </div>
-            <div class="tl-marco tl-marco-b" style="left:56.8%">
+            <div class="tl-marco tl-marco-b" style="left:51.8%">
               <div class="tl-marco-stem"></div>
               <div class="tl-diamond breve"></div>
-              <span class="tl-mlabel">TAP+Tel.</span>
-              <span class="tl-mdate">12–26/06</span>
-            </div>
-            <div class="tl-marco tl-marco-a" style="left:59.9%">
-              <span class="tl-mlabel">Func.OK</span>
+              <span class="tl-mlabel">Kick-off</span>
               <span class="tl-mdate">30/06</span>
+            </div>
+            <div class="tl-marco tl-marco-a" style="left:52.1%">
+              <span class="tl-mlabel">TAP</span>
+              <span class="tl-mdate">01/07</span>
+              <div class="tl-diamond breve"></div>
+              <div class="tl-marco-stem"></div>
+            </div>
+            <div class="tl-marco tl-marco-b" style="left:57.8%">
+              <div class="tl-marco-stem"></div>
+              <div class="tl-diamond medio"></div>
+              <span class="tl-mlabel">Func.OK</span>
+              <span class="tl-mdate">20/07</span>
+            </div>
+            <div class="tl-marco tl-marco-a" style="left:59.0%">
+              <span class="tl-mlabel">Tel.Migr.</span>
+              <span class="tl-mdate">24/07</span>
               <div class="tl-diamond medio"></div>
               <div class="tl-marco-stem"></div>
             </div>
-            <div class="tl-marco tl-marco-b" style="left:62.4%">
-              <div class="tl-marco-stem"></div>
-              <div class="tl-diamond medio"></div>
-              <span class="tl-mlabel">Dashboard</span>
-              <span class="tl-mdate">07/07</span>
-            </div>
-            <div class="tl-marco tl-marco-a" style="left:76.7%">
-              <span class="tl-mlabel">URA</span>
-              <span class="tl-mdate">17/08</span>
+            <div class="tl-marco tl-marco-a" style="left:78.9%">
+              <span class="tl-mlabel">URA+Dash.</span>
+              <span class="tl-mdate">28/09</span>
               <div class="tl-diamond futuro"></div>
               <div class="tl-marco-stem"></div>
             </div>
-            <div class="tl-marco tl-marco-a" style="left:84.3%">
+            <div class="tl-marco tl-marco-a" style="left:85.8%">
               <span class="tl-mlabel">Go-live</span>
-              <span class="tl-mdate">08/09</span>
+              <span class="tl-mdate">21/10</span>
               <div class="tl-diamond futuro"></div>
               <div class="tl-marco-stem"></div>
             </div>
-            <div class="tl-marco tl-marco-a" style="left:98%">
+            <div class="tl-marco tl-marco-a" style="left:98.8%">
               <span class="tl-mlabel">Aceite</span>
-              <span class="tl-mdate">21/10</span>
+              <span class="tl-mdate">03/12</span>
               <div class="tl-diamond futuro"></div>
               <div class="tl-marco-stem"></div>
             </div>
@@ -599,7 +614,7 @@ select:focus{outline:none;border-color:var(--blue)}
   </div>
 
   <div class="panel">
-    <p class="section-title">Backlog de pendências — tarefas futuras (primeiras 25)</p>
+    <p class="section-title">Backlog de pendências - tarefas futuras (primeiras 25)</p>
     <div class="table-wrap">
       <table id="backlog-table">
         <thead><tr><th>EDT</th><th>Tarefa</th><th>Fase</th><th>Início</th><th>Término</th><th>Responsável</th><th>Status</th><th>Ação</th></tr></thead>
@@ -678,8 +693,8 @@ select:focus{outline:none;border-color:var(--blue)}
 document.getElementById('hdate').textContent=new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
 
 const PROJECT_START=new Date('2026-01-09');
-const PROJECT_END=new Date('2026-10-23');
-const TODAY=new Date('2026-06-03');
+const PROJECT_END=new Date('2026-12-07');
+const TODAY=new Date('2026-06-17');
 
 function parseDate(s){
   if(!s||typeof s!=='string')return null;
@@ -690,8 +705,8 @@ function parseDate(s){
 }
 
 const RAW=[
-  {id:'0',edt:'0',nome:'Projeto PASI - Fase II',fase:'Projeto',status:'No Prazo',pct:.51,inicio:'Sex 09/01/26',termino:'Sex 23/10/26',resp:'',isPhase:true},
-  {id:'1',edt:'1',nome:'Fase - Ideação',fase:'Ideação',status:'No Prazo',pct:.93,inicio:'Sex 09/01/26',termino:'Sex 12/06/26',resp:'',isPhase:true},
+  {id:'0',edt:'0',nome:'Projeto PASI - Fase II',fase:'Projeto',status:'No Prazo',pct:.51,inicio:'Sex 09/01/26',termino:'Seg 07/12/26',resp:'',isPhase:true},
+  {id:'1',edt:'1',nome:'Fase - Ideação',fase:'Ideação',status:'No Prazo',pct:.88,inicio:'Sex 09/01/26',termino:'Qua 01/07/26',resp:'',isPhase:true},
   {id:'2',edt:'1.1',nome:'Recebimento do Projeto',fase:'Ideação',status:'Concluída',pct:1,inicio:'Sex 09/01/26',termino:'Sex 09/01/26',resp:'Rodrigo Castro',isMarco:true},
   {id:'3',edt:'1.2',nome:'Paralisação do Projeto - Fase 02',fase:'Ideação',status:'Concluída',pct:1,inicio:'Sex 09/01/26',termino:'Sex 10/04/26',resp:'Mateus Ribeiro'},
   {id:'4',edt:'1.3',nome:'Reativação do Projeto',fase:'Ideação',status:'Concluída',pct:1,inicio:'Seg 13/04/26',termino:'Ter 14/04/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
@@ -704,97 +719,97 @@ const RAW=[
   {id:'11',edt:'1.10',nome:'Detalhar escopo, entregáveis e critérios de aceite',fase:'Ideação',status:'Concluída',pct:1,inicio:'Sex 08/05/26',termino:'Qua 13/05/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
   {id:'12',edt:'1.11',nome:'Construir EAP/WBS e cronograma detalhado',fase:'Ideação',status:'Concluída',pct:1,inicio:'Qui 14/05/26',termino:'Qui 28/05/26',resp:'Rodrigo Castro'},
   {id:'13',edt:'1.12',nome:'Definir plano de comunicação e governança',fase:'Ideação',status:'Concluída',pct:1,inicio:'Sex 29/05/26',termino:'Ter 02/06/26',resp:'Rodrigo Castro'},
-  {id:'14',edt:'1.13',nome:'Mapear riscos, dependências e plano de respostas',fase:'Ideação',status:'Tarefa futura',pct:0,inicio:'Qua 03/06/26',termino:'Sex 05/06/26',resp:'Rodrigo Castro'},
-  {id:'15',edt:'1.14',nome:'Validar plano do projeto',fase:'Ideação',status:'Tarefa futura',pct:0,inicio:'Seg 08/06/26',termino:'Qua 10/06/26',resp:'Rodrigo Castro'},
-  {id:'16',edt:'1.15',nome:'Realizar kick-off do projeto',fase:'Ideação',status:'Tarefa futura',pct:0,inicio:'Qui 11/06/26',termino:'Qui 11/06/26',resp:'Rodrigo Castro'},
-  {id:'17',edt:'1.16',nome:'Elaborar Termo de Abertura do Projeto (TAP)',fase:'Ideação',status:'Tarefa futura',pct:0,inicio:'Sex 12/06/26',termino:'Sex 12/06/26',resp:'Rodrigo Castro'},
-  {id:'18',edt:'1.17',nome:'Escopo Aprovado',fase:'Ideação',status:'Tarefa futura',pct:0,inicio:'Qua 10/06/26',termino:'Qua 10/06/26',resp:'Concept + PASI',isMarco:true},
-  {id:'19',edt:'1.18',nome:'TAP Encaminhada',fase:'Ideação',status:'Tarefa futura',pct:0,inicio:'Sex 12/06/26',termino:'Sex 12/06/26',resp:'Rodrigo Castro',isMarco:true},
-  {id:'20',edt:'2',nome:'Fase - Planejamento',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Qui 11/06/26',termino:'Ter 30/06/26',resp:'',isPhase:true},
-  {id:'21',edt:'2.1',nome:'Mapear jornada ponta a ponta do atendimento',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 15/06/26',termino:'Ter 16/06/26',resp:'Mateus Ribeiro'},
-  {id:'22',edt:'2.2',nome:'Mapear Acessos',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Qua 17/06/26',termino:'Qui 18/06/26',resp:'Mateus Ribeiro'},
-  {id:'23',edt:'2.3',nome:'Definir KPIs Qualidade',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Qua 17/06/26',termino:'Qui 18/06/26',resp:'Mateus Ribeiro'},
-  {id:'24',edt:'2.4',nome:'Definir KPIs Informacional',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Qua 17/06/26',termino:'Qui 18/06/26',resp:'Mateus Ribeiro'},
-  {id:'25',edt:'2.5',nome:'Confirmar contrato (1300 contatos/mês)',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Qui 11/06/26',termino:'Qui 11/06/26',resp:'Mateus Ribeiro'},
-  {id:'26',edt:'2.6',nome:'Levantar volumetria receptivo comercial',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Qui 11/06/26',termino:'Qui 11/06/26',resp:'Mateus Ribeiro'},
-  {id:'27',edt:'2.7',nome:'Definir dimensionamento de atendentes',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Sex 12/06/26',termino:'Sex 12/06/26',resp:'Mateus Ribeiro'},
-  {id:'28',edt:'2.8',nome:'Levantar Top 10 motivos de contato',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Ter 16/06/26',termino:'Ter 16/06/26',resp:'Mateus Ribeiro'},
-  {id:'29',edt:'2.9',nome:'Definir resolução na ligação vs ticket',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Ter 16/06/26',termino:'Ter 16/06/26',resp:'Mateus Ribeiro'},
-  {id:'30',edt:'2.10',nome:'Definir script mínimo de identificação',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Ter 16/06/26',termino:'Ter 16/06/26',resp:'Mateus Ribeiro'},
-  {id:'31',edt:'2.11',nome:'Definir regras de roteamento e transbordo',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Ter 16/06/26',termino:'Ter 16/06/26',resp:'Mateus Ribeiro'},
-  {id:'32',edt:'2.12',nome:'Definir matriz de transferência',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Ter 16/06/26',termino:'Ter 16/06/26',resp:'Mateus Ribeiro'},
-  {id:'33',edt:'2.13',nome:'Consolidar mensagens e contingência',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Ter 16/06/26',termino:'Ter 16/06/26',resp:'Mateus Ribeiro'},
-  {id:'34',edt:'2.14',nome:'Definir regra de callback em queda de ligação',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Ter 16/06/26',termino:'Ter 16/06/26',resp:'Mateus Ribeiro'},
-  {id:'35',edt:'2.15',nome:'Validar estratégia de máscara do número',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Qui 11/06/26',termino:'Qua 24/06/26',resp:'Rodrigo Castro'},
-  {id:'36',edt:'2.16',nome:'Definir tabulações (espelhar padrão PASI)',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Ter 16/06/26',termino:'Ter 16/06/26',resp:'Mateus Ribeiro'},
-  {id:'37',edt:'2.17',nome:'Definir relatórios/KPIs e formato BI',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Qua 17/06/26',termino:'Ter 23/06/26',resp:'Mateus Ribeiro'},
-  {id:'38',edt:'2.18',nome:'Definir gravações e auditoria/qualidade',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Qua 17/06/26',termino:'Sex 26/06/26',resp:'Mateus Ribeiro'},
-  {id:'39',edt:'2.19',nome:'Definir requisitos de integração telefonia',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Qua 17/06/26',termino:'Ter 23/06/26',resp:'Mateus Ribeiro'},
-  {id:'40',edt:'2.20',nome:'Aprovar desenho funcional e operacional',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 29/06/26',termino:'Ter 30/06/26',resp:'Concept + PASI'},
-  {id:'41',edt:'2.21',nome:'Desenho Funcional e Operacional OK',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Ter 30/06/26',termino:'Ter 30/06/26',resp:'Rodrigo Castro',isMarco:true},
-  {id:'42',edt:'3',nome:'Migração Telefonia PASI',fase:'Telefonia',status:'No Prazo',pct:.85,inicio:'Sex 09/01/26',termino:'Sex 26/06/26',resp:'',isPhase:true},
+  {id:'14',edt:'1.13',nome:'Mapear riscos, dependências e plano de respostas',fase:'Ideação',status:'Concluída',pct:1,inicio:'Qua 03/06/26',termino:'Sex 05/06/26',resp:'Rodrigo Castro'},
+  {id:'15',edt:'1.14',nome:'Validar plano do projeto',fase:'Ideação',status:'Concluída',pct:1,inicio:'Seg 08/06/26',termino:'Qua 10/06/26',resp:'Rodrigo Castro'},
+  {id:'16',edt:'1.15',nome:'Realizar kick-off do projeto',fase:'Ideação',status:'Tarefa futura',pct:0,inicio:'Qui 11/06/26',termino:'Ter 30/06/26',resp:'Rodrigo Castro'},
+  {id:'17',edt:'1.16',nome:'Elaborar Termo de Abertura do Projeto (TAP)',fase:'Ideação',status:'Tarefa futura',pct:0,inicio:'Qua 01/07/26',termino:'Qua 01/07/26',resp:'Rodrigo Castro'},
+  {id:'18',edt:'1.17',nome:'Escopo Aprovado',fase:'Ideação',status:'Concluída',pct:1,inicio:'Qua 10/06/26',termino:'Qua 10/06/26',resp:'Concept + PASI',isMarco:true},
+  {id:'19',edt:'1.18',nome:'TAP Encaminhada',fase:'Ideação',status:'Tarefa futura',pct:0,inicio:'Qua 01/07/26',termino:'Qua 01/07/26',resp:'Rodrigo Castro',isMarco:true},
+  {id:'20',edt:'2',nome:'Fase - Planejamento',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Ter 30/06/26',termino:'Seg 20/07/26',resp:'',isPhase:true},
+  {id:'21',edt:'2.1',nome:'Mapear jornada ponta a ponta do atendimento',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Seg 06/07/26',resp:'Mateus Ribeiro'},
+  {id:'22',edt:'2.2',nome:'Mapear Acessos',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Ter 07/07/26',resp:'Mateus Ribeiro'},
+  {id:'23',edt:'2.3',nome:'Definir KPIs Qualidade',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Ter 07/07/26',resp:'Mateus Ribeiro'},
+  {id:'24',edt:'2.4',nome:'Definir KPIs Informacional',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Ter 07/07/26',resp:'Mateus Ribeiro'},
+  {id:'25',edt:'2.5',nome:'Confirmar contrato (1300 contatos/mês)',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Ter 30/06/26',termino:'Ter 30/06/26',resp:'Mateus Ribeiro'},
+  {id:'26',edt:'2.6',nome:'Levantar volumetria receptivo comercial',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Ter 30/06/26',termino:'Ter 30/06/26',resp:'Mateus Ribeiro'},
+  {id:'27',edt:'2.7',nome:'Definir dimensionamento de atendentes',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Qua 01/07/26',termino:'Qua 01/07/26',resp:'Mateus Ribeiro'},
+  {id:'28',edt:'2.8',nome:'Levantar Top 10 motivos de contato',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Seg 06/07/26',resp:'Mateus Ribeiro'},
+  {id:'29',edt:'2.9',nome:'Definir resolução na ligação vs ticket',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Seg 06/07/26',resp:'Mateus Ribeiro'},
+  {id:'30',edt:'2.10',nome:'Definir script mínimo de identificação',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Seg 06/07/26',resp:'Mateus Ribeiro'},
+  {id:'31',edt:'2.11',nome:'Definir regras de roteamento e transbordo',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Seg 06/07/26',resp:'Mateus Ribeiro'},
+  {id:'32',edt:'2.12',nome:'Definir matriz de transferência',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Seg 06/07/26',resp:'Mateus Ribeiro'},
+  {id:'33',edt:'2.13',nome:'Consolidar mensagens e contingência',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Seg 06/07/26',resp:'Mateus Ribeiro'},
+  {id:'34',edt:'2.14',nome:'Definir regra de callback em queda de ligação',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Seg 06/07/26',resp:'Mateus Ribeiro'},
+  {id:'35',edt:'2.15',nome:'Validar estratégia de máscara do número',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Ter 30/06/26',termino:'Seg 13/07/26',resp:'Rodrigo Castro'},
+  {id:'36',edt:'2.16',nome:'Definir tabulações (espelhar padrão PASI)',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Seg 06/07/26',resp:'Mateus Ribeiro'},
+  {id:'37',edt:'2.17',nome:'Definir relatórios/KPIs e formato BI',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Seg 13/07/26',resp:'Mateus Ribeiro'},
+  {id:'38',edt:'2.18',nome:'Definir gravações e auditoria/qualidade',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Qua 15/07/26',resp:'Mateus Ribeiro'},
+  {id:'39',edt:'2.19',nome:'Definir requisitos de integração telefonia',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Seg 13/07/26',resp:'Mateus Ribeiro'},
+  {id:'40',edt:'2.20',nome:'Aprovar desenho funcional e operacional',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 20/07/26',termino:'Seg 20/07/26',resp:'Concept + PASI'},
+  {id:'41',edt:'2.21',nome:'Desenho Funcional e Operacional OK',fase:'Planejamento',status:'Tarefa futura',pct:0,inicio:'Seg 20/07/26',termino:'Seg 20/07/26',resp:'Rodrigo Castro',isMarco:true},
+  {id:'42',edt:'3',nome:'Migração Telefonia PASI',fase:'Telefonia',status:'No Prazo',pct:.74,inicio:'Sex 09/01/26',termino:'Sex 24/07/26',resp:'',isPhase:true},
   {id:'43',edt:'3.1',nome:'Contratação novo fornecedor',fase:'Telefonia',status:'Concluída',pct:1,inicio:'Sex 09/01/26',termino:'Qui 12/02/26',resp:'Mateus Ribeiro'},
-  {id:'44',edt:'3.2',nome:'Migrar telefonia PASI (GO-TO → Micro SIP Vivo)',fase:'Telefonia',status:'No Prazo',pct:.96,inicio:'Sex 13/02/26',termino:'Sex 05/06/26',resp:'Mateus Ribeiro'},
-  {id:'45',edt:'3.3',nome:'Concluir estabilização/migração do 0800',fase:'Telefonia',status:'Tarefa futura',pct:0,inicio:'Seg 08/06/26',termino:'Sex 26/06/26',resp:'Mateus Ribeiro'},
-  {id:'46',edt:'3.4',nome:'Telefonia PASI Migrada',fase:'Telefonia',status:'Tarefa futura',pct:0,inicio:'Sex 26/06/26',termino:'Sex 26/06/26',resp:'Mateus Ribeiro',isMarco:true},
-  {id:'47',edt:'4',nome:'Fase - Execução',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 17/06/26',termino:'Ter 18/08/26',resp:'',isPhase:true},
-  {id:'48',edt:'4.1',nome:'Configuração/Construção URA',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 29/06/26',termino:'Sex 17/07/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'49',edt:'4.2',nome:'Provisionar acessos e preparar ambientes',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 20/07/26',termino:'Ter 21/07/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'50',edt:'4.3',nome:'Configurar URA, filas, roteamento e transbordo',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 22/07/26',termino:'Sex 24/07/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'51',edt:'4.4',nome:'Configurar regras de horário e mensagens',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 27/07/26',termino:'Qua 29/07/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'52',edt:'4.5',nome:'Implantar tabulações e parâmetros operacionais',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qui 30/07/26',termino:'Sex 31/07/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'53',edt:'4.6',nome:'Integrar telefonia Concept + PASI',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 03/08/26',termino:'Sex 07/08/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'54',edt:'4.7',nome:'Montar base de conhecimento Comercial (Top 10)',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 17/06/26',termino:'Ter 30/06/26',resp:'Mateus Ribeiro'},
-  {id:'55',edt:'4.8',nome:'Preparar templates de relatórios e dashboards',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 01/07/26',termino:'Qua 01/07/26',resp:'Mateus Ribeiro'},
-  {id:'56',edt:'4.9',nome:'Reunião TI/Telefonia + teste ponta a ponta',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 10/08/26',termino:'Ter 11/08/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'57',edt:'4.10',nome:'URA Configurada',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 11/08/26',termino:'Ter 11/08/26',resp:'Rodrigo Castro + Mateus Ribeiro',isMarco:true},
-  {id:'58',edt:'4.11',nome:'Validação/Homologação',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 12/08/26',termino:'Seg 17/08/26',resp:'Rodrigo Castro'},
-  {id:'59',edt:'4.11.1',nome:'Elaborar plano e caderno de testes',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 12/08/26',termino:'Qua 12/08/26',resp:'Rodrigo Castro'},
-  {id:'60',edt:'4.11.2',nome:'Executar testes funcionais ponta a ponta',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qui 13/08/26',termino:'Qui 13/08/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'61',edt:'4.11.3',nome:'Executar testes de contingência e transbordo',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qui 13/08/26',termino:'Qui 13/08/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'62',edt:'4.11.4',nome:'Executar ajustes e retestes',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Sex 14/08/26',termino:'Sex 14/08/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'63',edt:'4.11.5',nome:'Aprovar homologação',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 17/08/26',termino:'Seg 17/08/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'64',edt:'4.11.6',nome:'URA Configurada + Homologada',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 17/08/26',termino:'Seg 17/08/26',resp:'Rodrigo Castro + Mateus Ribeiro',isMarco:true},
-  {id:'65',edt:'4.12',nome:'Treinamento',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Ter 14/07/26',resp:'Mateus Ribeiro'},
-  {id:'66',edt:'4.12.1',nome:'Definir conteúdo mínimo de treinamento',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Seg 06/07/26',resp:'Mateus Ribeiro'},
-  {id:'67',edt:'4.12.2',nome:'Consolidar material de treinamento',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 07/07/26',termino:'Ter 07/07/26',resp:'Mateus Ribeiro'},
-  {id:'68',edt:'4.12.3',nome:'Capacitação dos Instrutores - Concept',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 08/07/26',termino:'Qui 09/07/26',resp:'Mateus Ribeiro'},
-  {id:'69',edt:'4.12.4',nome:'Aplicar treinamento operacional (Fase 2)',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Sex 10/07/26',termino:'Seg 13/07/26',resp:'Instrutoria Concept'},
-  {id:'70',edt:'4.12.5',nome:'Implementar critério de prontidão',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 14/07/26',termino:'Ter 14/07/26',resp:'Mateus Ribeiro'},
-  {id:'71',edt:'4.12.6',nome:'Consultores Capacitados',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 14/07/26',termino:'Ter 14/07/26',resp:'',isMarco:true},
-  {id:'72',edt:'4.13',nome:'Acessos',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Sex 19/06/26',termino:'Ter 18/08/26',resp:''},
-  {id:'73',edt:'4.13.1',nome:'Cadastros colaboradores Sistemas Concept + PASI',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Sex 19/06/26',termino:'Seg 22/06/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'74',edt:'4.13.2',nome:'Liberação de Acessos à URA (Opção 01)',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 23/06/26',termino:'Qua 24/06/26',resp:'Mateus Ribeiro'},
-  {id:'75',edt:'4.13.3',nome:'Liberação de Acessos às demais aplicações',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qui 25/06/26',termino:'Sex 26/06/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'76',edt:'4.13.4',nome:'Testar os Acessos',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 29/06/26',termino:'Seg 29/06/26',resp:'OPERAÇÃO Concept'},
-  {id:'77',edt:'4.13.5',nome:'Estrutura e Fluxo Incidentes / Sustentação PASI',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 18/08/26',termino:'Ter 18/08/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'78',edt:'4.13.6',nome:'Fluxo de Sustentação PASI OK',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 18/08/26',termino:'Ter 18/08/26',resp:'Rodrigo Castro + Mateus Ribeiro',isMarco:true},
-  {id:'79',edt:'4.13.7',nome:'Acessos Validados',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 29/06/26',termino:'Seg 29/06/26',resp:'OPERAÇÃO Concept',isMarco:true},
-  {id:'80',edt:'4.14',nome:'Qualidade',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Sex 19/06/26',termino:'Qui 25/06/26',resp:''},
-  {id:'81',edt:'4.14.1',nome:'Capacitar Time Gestão Concept (KPIs PASI)',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Sex 19/06/26',termino:'Seg 22/06/26',resp:'Mateus Ribeiro'},
-  {id:'82',edt:'4.14.2',nome:'Definir bases/layout padrão de report',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 23/06/26',termino:'Qua 24/06/26',resp:'Qualidade Concept'},
-  {id:'83',edt:'4.14.3',nome:'Definir estratégia de acompanhamento da qualidade',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qui 25/06/26',termino:'Qui 25/06/26',resp:'Qualidade Concept'},
-  {id:'84',edt:'4.14.4',nome:'Liberação para Início das Monitorias',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qui 25/06/26',termino:'Qui 25/06/26',resp:'Qualidade Concept',isMarco:true},
-  {id:'85',edt:'4.15',nome:'Informacional',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Sex 19/06/26',termino:'Ter 07/07/26',resp:''},
-  {id:'86',edt:'4.15.1',nome:'Levantar Requisito Concept / PASI',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Sex 19/06/26',termino:'Qua 24/06/26',resp:'Inteligência Concept + PASI'},
-  {id:'87',edt:'4.15.2',nome:'Montar Infra',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qui 25/06/26',termino:'Sex 26/06/26',resp:'Inteligência Concept + PASI'},
-  {id:'88',edt:'4.15.3',nome:'Entrega das Bases de Dados',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 29/06/26',termino:'Ter 30/06/26',resp:'Concept + PASI'},
-  {id:'89',edt:'4.15.4',nome:'Desenvolver Modelos de Acompanhamento Gerencial',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 01/07/26',termino:'Sex 03/07/26',resp:'Concept + PASI'},
-  {id:'90',edt:'4.15.5',nome:'Desenvolver Modelos de Acompanhamento Operacional',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 29/06/26',termino:'Qua 01/07/26',resp:'Concept + PASI'},
-  {id:'91',edt:'4.15.6',nome:'Homologar Indicadores e Relatórios',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Ter 07/07/26',resp:'Concept + PASI'},
-  {id:'92',edt:'4.15.7',nome:'Dashboard OK',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 07/07/26',termino:'Ter 07/07/26',resp:'Concept + PASI',isMarco:true},
-  {id:'93',edt:'5',nome:'Fase - Implantação',fase:'Implantação',status:'Tarefa futura',pct:0,inicio:'Seg 17/08/26',termino:'Ter 08/09/26',resp:'',isPhase:true},
-  {id:'94',edt:'5.1',nome:'Liberação para Início Operacional',fase:'Implantação',status:'Tarefa futura',pct:0,inicio:'Seg 17/08/26',termino:'Seg 17/08/26',resp:'Rodrigo Castro + Mateus Ribeiro',isMarco:true},
-  {id:'95',edt:'5.2',nome:'Decidir e executar piloto curto ou go-live',fase:'Implantação',status:'Tarefa futura',pct:0,inicio:'Seg 17/08/26',termino:'Seg 17/08/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'96',edt:'5.3',nome:'Piloto Controlado',fase:'Implantação',status:'Tarefa futura',pct:0,inicio:'Ter 18/08/26',termino:'Seg 07/09/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'97',edt:'5.4',nome:'Avaliar piloto e implementar ajustes finais',fase:'Implantação',status:'Tarefa futura',pct:0,inicio:'Ter 08/09/26',termino:'Ter 08/09/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
-  {id:'98',edt:'5.5',nome:'Realizar go-live',fase:'Implantação',status:'Tarefa futura',pct:0,inicio:'Ter 08/09/26',termino:'Ter 08/09/26',resp:'Rodrigo Castro + Mateus Ribeiro',isMarco:true},
-  {id:'99',edt:'6',nome:'Fase - Encerramento',fase:'Encerramento',status:'Tarefa futura',pct:0,inicio:'Qua 09/09/26',termino:'Sex 23/10/26',resp:'',isPhase:true},
-  {id:'100',edt:'6.1',nome:'Executar operação assistida',fase:'Encerramento',status:'Tarefa futura',pct:0,inicio:'Qua 09/09/26',termino:'Ter 20/10/26',resp:'Rodrigo Castro'},
-  {id:'101',edt:'6.2',nome:'Formalizar aceite final',fase:'Encerramento',status:'Tarefa futura',pct:0,inicio:'Qua 21/10/26',termino:'Qua 21/10/26',resp:'Rodrigo Castro'},
-  {id:'102',edt:'6.3',nome:'Consolidar lições aprendidas',fase:'Encerramento',status:'Tarefa futura',pct:0,inicio:'Qui 22/10/26',termino:'Qui 22/10/26',resp:'Rodrigo Castro'},
-  {id:'103',edt:'6.4',nome:'Transferir para sustentação e encerrar projeto',fase:'Encerramento',status:'Tarefa futura',pct:0,inicio:'Sex 23/10/26',termino:'Sex 23/10/26',resp:'Rodrigo Castro'},
-  {id:'104',edt:'7',nome:'Encerramento Oficial do Projeto',fase:'Encerramento',status:'Tarefa futura',pct:0,inicio:'Sex 23/10/26',termino:'Sex 23/10/26',resp:'Rodrigo Castro',isMarco:true}
+  {id:'44',edt:'3.2',nome:'Migrar telefonia PASI (GO-TO → Micro SIP Vivo)',fase:'Telefonia',status:'No Prazo',pct:.77,inicio:'Sex 13/02/26',termino:'Sex 03/07/26',resp:'Mateus Ribeiro'},
+  {id:'45',edt:'3.3',nome:'Concluir estabilização/migração do 0800',fase:'Telefonia',status:'Tarefa futura',pct:0,inicio:'Seg 06/07/26',termino:'Sex 24/07/26',resp:'Mateus Ribeiro'},
+  {id:'46',edt:'3.4',nome:'Telefonia PASI Migrada',fase:'Telefonia',status:'Tarefa futura',pct:0,inicio:'Sex 24/07/26',termino:'Sex 24/07/26',resp:'Mateus Ribeiro',isMarco:true},
+  {id:'47',edt:'4',nome:'Fase - Execução',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 27/07/26',termino:'Seg 28/09/26',resp:'',isPhase:true},
+  {id:'48',edt:'4.1',nome:'Configuração/Construção URA',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 10/08/26',termino:'Qua 26/08/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'49',edt:'4.2',nome:'Provisionar acessos e preparar ambientes',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 31/08/26',termino:'Seg 31/08/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'50',edt:'4.3',nome:'Configurar URA, filas, roteamento e transbordo',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 31/08/26',termino:'Qua 02/09/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'51',edt:'4.4',nome:'Configurar regras de horário e mensagens',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 07/09/26',termino:'Seg 07/09/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'52',edt:'4.5',nome:'Implantar tabulações e parâmetros operacionais',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 08/09/26',termino:'Qua 09/09/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'53',edt:'4.6',nome:'Integrar telefonia Concept + PASI',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 14/09/26',termino:'Qua 16/09/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'54',edt:'4.7',nome:'Montar base de conhecimento Comercial (Top 10)',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 27/07/26',termino:'Seg 10/08/26',resp:'Mateus Ribeiro'},
+  {id:'55',edt:'4.8',nome:'Preparar templates de relatórios e dashboards',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 10/08/26',termino:'Seg 10/08/26',resp:'Mateus Ribeiro'},
+  {id:'56',edt:'4.9',nome:'Reunião TI/Telefonia + teste ponta a ponta',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 21/09/26',termino:'Seg 21/09/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'57',edt:'4.10',nome:'URA Configurada',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 21/09/26',termino:'Seg 21/09/26',resp:'Rodrigo Castro + Mateus Ribeiro',isMarco:true},
+  {id:'58',edt:'4.11',nome:'Validação/Homologação',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 21/09/26',termino:'Seg 28/09/26',resp:'Rodrigo Castro'},
+  {id:'59',edt:'4.11.1',nome:'Elaborar plano e caderno de testes',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 21/09/26',termino:'Seg 21/09/26',resp:'Rodrigo Castro'},
+  {id:'60',edt:'4.11.2',nome:'Executar testes funcionais ponta a ponta',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 22/09/26',termino:'Ter 22/09/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'61',edt:'4.11.3',nome:'Executar testes de contingência e transbordo',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 22/09/26',termino:'Ter 22/09/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'62',edt:'4.11.4',nome:'Executar ajustes e retestes',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 23/09/26',termino:'Qua 23/09/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'63',edt:'4.11.5',nome:'Aprovar homologação',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 28/09/26',termino:'Seg 28/09/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'64',edt:'4.11.6',nome:'URA Configurada + Homologada',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 28/09/26',termino:'Seg 28/09/26',resp:'Rodrigo Castro + Mateus Ribeiro',isMarco:true},
+  {id:'65',edt:'4.12',nome:'Treinamento',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 17/08/26',termino:'Seg 24/08/26',resp:'Mateus Ribeiro'},
+  {id:'66',edt:'4.12.1',nome:'Definir conteúdo mínimo de treinamento',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 17/08/26',termino:'Seg 17/08/26',resp:'Mateus Ribeiro'},
+  {id:'67',edt:'4.12.2',nome:'Consolidar material de treinamento',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 17/08/26',termino:'Seg 17/08/26',resp:'Mateus Ribeiro'},
+  {id:'68',edt:'4.12.3',nome:'Capacitação dos Instrutores - Concept',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 17/08/26',termino:'Ter 18/08/26',resp:'Mateus Ribeiro'},
+  {id:'69',edt:'4.12.4',nome:'Aplicar treinamento operacional (Fase 2)',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 19/08/26',termino:'Seg 24/08/26',resp:'Instrutoria Concept'},
+  {id:'70',edt:'4.12.5',nome:'Implementar critério de prontidão',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 24/08/26',termino:'Seg 24/08/26',resp:'Mateus Ribeiro'},
+  {id:'71',edt:'4.12.6',nome:'Consultores Capacitados',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 24/08/26',termino:'Seg 24/08/26',resp:'',isMarco:true},
+  {id:'72',edt:'4.13',nome:'Acessos',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 29/07/26',termino:'Seg 28/09/26',resp:''},
+  {id:'73',edt:'4.13.1',nome:'Cadastros colaboradores Sistemas Concept + PASI',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 29/07/26',termino:'Seg 03/08/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'74',edt:'4.13.2',nome:'Liberação de Acessos à URA (Opção 01)',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 03/08/26',termino:'Seg 03/08/26',resp:'Mateus Ribeiro'},
+  {id:'75',edt:'4.13.3',nome:'Liberação de Acessos às demais aplicações',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 04/08/26',termino:'Qua 05/08/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'76',edt:'4.13.4',nome:'Testar os Acessos',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 10/08/26',termino:'Seg 10/08/26',resp:'OPERAÇÃO Concept'},
+  {id:'77',edt:'4.13.5',nome:'Estrutura e Fluxo Incidentes / Sustentação PASI',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 28/09/26',termino:'Seg 28/09/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'78',edt:'4.13.6',nome:'Fluxo de Sustentação PASI OK',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 28/09/26',termino:'Seg 28/09/26',resp:'Rodrigo Castro + Mateus Ribeiro',isMarco:true},
+  {id:'79',edt:'4.13.7',nome:'Acessos Validados',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 10/08/26',termino:'Seg 10/08/26',resp:'OPERAÇÃO Concept',isMarco:true},
+  {id:'80',edt:'4.14',nome:'Qualidade',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 29/07/26',termino:'Ter 04/08/26',resp:''},
+  {id:'81',edt:'4.14.1',nome:'Capacitar Time Gestão Concept (KPIs PASI)',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 29/07/26',termino:'Seg 03/08/26',resp:'Mateus Ribeiro'},
+  {id:'82',edt:'4.14.2',nome:'Definir bases/layout padrão de report',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 03/08/26',termino:'Seg 03/08/26',resp:'Qualidade Concept'},
+  {id:'83',edt:'4.14.3',nome:'Definir estratégia de acompanhamento da qualidade',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 04/08/26',termino:'Ter 04/08/26',resp:'Qualidade Concept'},
+  {id:'84',edt:'4.14.4',nome:'Liberação para Início das Monitorias',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 04/08/26',termino:'Ter 04/08/26',resp:'Qualidade Concept',isMarco:true},
+  {id:'85',edt:'4.15',nome:'Informacional',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 29/07/26',termino:'Seg 17/08/26',resp:''},
+  {id:'86',edt:'4.15.1',nome:'Levantar Requisito Concept / PASI',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Qua 29/07/26',termino:'Seg 03/08/26',resp:'Inteligência Concept + PASI'},
+  {id:'87',edt:'4.15.2',nome:'Montar Infra',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Ter 04/08/26',termino:'Qua 05/08/26',resp:'Inteligência Concept + PASI'},
+  {id:'88',edt:'4.15.3',nome:'Entrega das Bases de Dados',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 10/08/26',termino:'Seg 10/08/26',resp:'Concept + PASI'},
+  {id:'89',edt:'4.15.4',nome:'Desenvolver Modelos de Acompanhamento Gerencial',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 10/08/26',termino:'Qua 12/08/26',resp:'Concept + PASI'},
+  {id:'90',edt:'4.15.5',nome:'Desenvolver Modelos de Acompanhamento Operacional',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 10/08/26',termino:'Seg 10/08/26',resp:'Concept + PASI'},
+  {id:'91',edt:'4.15.6',nome:'Homologar Indicadores e Relatórios',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 17/08/26',termino:'Seg 17/08/26',resp:'Concept + PASI'},
+  {id:'92',edt:'4.15.7',nome:'Dashboard OK',fase:'Execução',status:'Tarefa futura',pct:0,inicio:'Seg 17/08/26',termino:'Seg 17/08/26',resp:'Concept + PASI',isMarco:true},
+  {id:'93',edt:'5',nome:'Fase - Implantação',fase:'Implantação',status:'Tarefa futura',pct:0,inicio:'Ter 29/09/26',termino:'Qua 21/10/26',resp:'',isPhase:true},
+  {id:'94',edt:'5.1',nome:'Liberação para Início Operacional',fase:'Implantação',status:'Tarefa futura',pct:0,inicio:'Ter 29/09/26',termino:'Ter 29/09/26',resp:'Rodrigo Castro + Mateus Ribeiro',isMarco:true},
+  {id:'95',edt:'5.2',nome:'Decidir e executar piloto curto ou go-live',fase:'Implantação',status:'Tarefa futura',pct:0,inicio:'Ter 29/09/26',termino:'Ter 29/09/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'96',edt:'5.3',nome:'Piloto Controlado',fase:'Implantação',status:'Tarefa futura',pct:0,inicio:'Qua 30/09/26',termino:'Ter 20/10/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'97',edt:'5.4',nome:'Avaliar piloto e implementar ajustes finais',fase:'Implantação',status:'Tarefa futura',pct:0,inicio:'Qua 21/10/26',termino:'Qua 21/10/26',resp:'Rodrigo Castro + Mateus Ribeiro'},
+  {id:'98',edt:'5.5',nome:'Realizar go-live',fase:'Implantação',status:'Tarefa futura',pct:0,inicio:'Qua 21/10/26',termino:'Qua 21/10/26',resp:'Rodrigo Castro + Mateus Ribeiro',isMarco:true},
+  {id:'99',edt:'6',nome:'Fase - Encerramento',fase:'Encerramento',status:'Tarefa futura',pct:0,inicio:'Qui 22/10/26',termino:'Seg 07/12/26',resp:'',isPhase:true},
+  {id:'100',edt:'6.1',nome:'Executar operação assistida',fase:'Encerramento',status:'Tarefa futura',pct:0,inicio:'Qui 22/10/26',termino:'Qua 02/12/26',resp:'Rodrigo Castro'},
+  {id:'101',edt:'6.2',nome:'Formalizar aceite final',fase:'Encerramento',status:'Tarefa futura',pct:0,inicio:'Qui 03/12/26',termino:'Qui 03/12/26',resp:'Rodrigo Castro'},
+  {id:'102',edt:'6.3',nome:'Consolidar lições aprendidas',fase:'Encerramento',status:'Tarefa futura',pct:0,inicio:'Sex 04/12/26',termino:'Sex 04/12/26',resp:'Rodrigo Castro'},
+  {id:'103',edt:'6.4',nome:'Transferir para sustentação e encerrar projeto',fase:'Encerramento',status:'Tarefa futura',pct:0,inicio:'Seg 07/12/26',termino:'Seg 07/12/26',resp:'Rodrigo Castro'},
+  {id:'104',edt:'7',nome:'Encerramento Oficial do Projeto',fase:'Encerramento',status:'Tarefa futura',pct:0,inicio:'Seg 07/12/26',termino:'Seg 07/12/26',resp:'Rodrigo Castro',isMarco:true}
 ];
 
 let tasks=RAW.map(t=>({...t,obs:'',updatedAt:null}));
@@ -806,8 +821,8 @@ let riscos=[
   {id:5,desc:'Indisponibilidade dos pontos focais nas etapas críticas',pilar:'Geral',impacto:'Médio',prob:'Baixa',plano:'Identificar backups; comunicar calendário com 2 semanas de antecedência',dono:'Rodrigo Castro',status:'Aberto',data:'03/06/26'}
 ];
 let auditLog=[
-  {data:'03/06/2026 09:00',usuario:'Sistema',campo:'Cronograma importado',anterior:'—',novo:'105 tarefas carregadas do MS Project'},
-  {data:'03/06/2026 09:00',usuario:'Sistema',campo:'Riscos inicializados',anterior:'—',novo:'5 riscos cadastrados a partir do TAP'}
+  {data:'03/06/2026 09:00',usuario:'Sistema',campo:'Cronograma importado',anterior:'-',novo:'105 tarefas carregadas do MS Project'},
+  {data:'03/06/2026 09:00',usuario:'Sistema',campo:'Riscos inicializados',anterior:'-',novo:'5 riscos cadastrados a partir do TAP'}
 ];
 let editingTask=null;
 
@@ -897,12 +912,12 @@ function renderPilares(){
         <tbody>${pt.slice(0,25).map(t=>`<tr>
           <td style="font-size:11px;color:var(--text2)">${t.edt}</td>
           <td style="font-size:12px;max-width:190px">${t.isMarco?'◆ ':''}<strong>${t.nome}</strong></td>
-          <td style="font-size:11px">${t.resp||'—'}</td>
+          <td style="font-size:11px">${t.resp||'-'}</td>
           <td style="font-size:11px;white-space:nowrap">${t.inicio.slice(-8)}</td>
           <td style="font-size:11px;white-space:nowrap">${t.termino.slice(-8)}</td>
           <td><div style="display:flex;align-items:center;gap:4px"><div class="prog-bar" style="width:36px"><div class="prog-fill" style="width:${Math.round(t.pct*100)}%"></div></div><span style="font-size:11px">${Math.round(t.pct*100)}%</span></div></td>
           <td><span class="badge ${t.status==='Concluída'?'b-green':t.status==='No Prazo'?'b-blue':'b-gray'}">${t.status}</span></td>
-          <td style="font-size:11px;color:var(--text2);max-width:120px">${t.obs||'—'}</td>
+          <td style="font-size:11px;color:var(--text2);max-width:120px">${t.obs||'-'}</td>
           <td><button class="edit-btn" onclick="openTaskModal('${t.id}')">✏</button></td>
         </tr>`).join('')}</tbody>
       </table>
@@ -957,8 +972,8 @@ function saveTask(){
   editingTask.pct=parseInt(document.getElementById('m-pct').value)/100;
   editingTask.obs=document.getElementById('m-obs').value;
   const now=new Date().toLocaleString('pt-BR');
-  if(os!==editingTask.status)auditLog.push({data:now,usuario:'Usuário',campo:'Status — '+editingTask.nome,anterior:os,novo:editingTask.status});
-  if(Math.abs(op-editingTask.pct)>.005)auditLog.push({data:now,usuario:'Usuário',campo:'% — '+editingTask.nome,anterior:Math.round(op*100)+'%',novo:Math.round(editingTask.pct*100)+'%'});
+  if(os!==editingTask.status)auditLog.push({data:now,usuario:'Usuário',campo:'Status - '+editingTask.nome,anterior:os,novo:editingTask.status});
+  if(Math.abs(op-editingTask.pct)>.005)auditLog.push({data:now,usuario:'Usuário',campo:'% - '+editingTask.nome,anterior:Math.round(op*100)+'%',novo:Math.round(editingTask.pct*100)+'%'});
   closeModal('task-modal');
   syncCards();
   renderPilares();
@@ -967,11 +982,11 @@ function saveTask(){
 function openRiskModal(){document.getElementById('risk-modal').classList.add('open');}
 function saveRisk(){
   riscos.push({id:riscos.length+1,desc:document.getElementById('r-desc').value,pilar:document.getElementById('r-pilar').value,impacto:document.getElementById('r-impact').value,prob:document.getElementById('r-prob').value,plano:document.getElementById('r-plano').value,dono:document.getElementById('r-dono').value,status:'Aberto',data:new Date().toLocaleDateString('pt-BR')});
-  auditLog.push({data:new Date().toLocaleString('pt-BR'),usuario:'Usuário',campo:'Novo risco cadastrado',anterior:'—',novo:document.getElementById('r-desc').value.slice(0,50)});
+  auditLog.push({data:new Date().toLocaleString('pt-BR'),usuario:'Usuário',campo:'Novo risco cadastrado',anterior:'-',novo:document.getElementById('r-desc').value.slice(0,50)});
   closeModal('risk-modal');
   renderRiscos();
 }
-// Shared helper — usada em syncCards, openCardModal e barCls
+// Shared helper - usada em syncCards, openCardModal e barCls
 function isAtrasada(t){
   if(t.isPhase||t.pct>=1)return false;
   const e=parseDate(t.termino);
@@ -979,26 +994,9 @@ function isAtrasada(t){
 }
 function syncCards(){
   // Durações reais das tarefas folha extraídas do MS Project
-  // A % geral usa média ponderada por duração — idêntico ao cálculo do MS Project
+  // A % geral usa média ponderada por duração - idêntico ao cálculo do MS Project
   // Tarefas com duração 0 (marcos) contribuem com peso 0, como no Project
-  const DUR={
-    '1.1':0,'1.2':66,'1.3':2,'1.4':1,'1.5':5,'1.6':3,'1.7':3,'1.8':3,
-    '1.9':2,'1.10':4,'1.11':11,'1.12':3,'1.13':3,'1.14':3,'1.15':1,
-    '1.16':1,'1.17':0,'1.18':0,
-    '2.1':2,'2.2':2,'2.3':2,'2.4':2,'2.5':0,'2.6':0,'2.7':0,'2.8':0,
-    '2.9':0,'2.10':0,'2.11':0,'2.12':0,'2.13':0,'2.14':0,'2.15':10,
-    '2.16':0,'2.17':5,'2.18':8,'2.19':5,'2.20':2,'2.21':0,
-    '3.1':25,'3.2':81,'3.3':15,'3.4':0,
-    '4.1':15,'4.2':2,'4.3':3,'4.4':3,'4.5':2,'4.6':5,'4.7':10,'4.8':1,
-    '4.9':2,'4.10':0,
-    '4.11.1':1,'4.11.2':1,'4.11.3':1,'4.11.4':1,'4.11.5':1,'4.11.6':0,
-    '4.12.1':1,'4.12.2':1,'4.12.3':2,'4.12.4':2,'4.12.5':1,'4.12.6':0,
-    '4.13.1':2,'4.13.2':2,'4.13.3':2,'4.13.4':1,'4.13.5':1,'4.13.6':0,'4.13.7':0,
-    '4.14.1':2,'4.14.2':2,'4.14.3':1,'4.14.4':0,
-    '4.15.1':4,'4.15.2':2,'4.15.3':2,'4.15.4':3,'4.15.5':3,'4.15.6':2,'4.15.7':0,
-    '5.1':0,'5.2':0,'5.3':15,'5.4':1,'5.5':0,
-    '6.1':30,'6.2':1,'6.3':1,'6.4':1
-  };
+  const DUR={'1.1':0,'1.2':91,'1.3':1,'1.4':0,'1.5':6,'1.6':4,'1.7':2,'1.8':4,'1.9':1,'1.10':5,'1.11':14,'1.12':4,'1.13':2,'1.14':2,'1.15':19,'1.16':0,'1.17':0,'1.18':0,'2.1':0,'2.2':1,'2.3':1,'2.4':1,'2.5':0,'2.6':0,'2.7':0,'2.8':0,'2.9':0,'2.10':0,'2.11':0,'2.12':0,'2.13':0,'2.14':0,'2.15':13,'2.16':0,'2.17':7,'2.18':9,'2.19':7,'2.20':0,'2.21':0,'3.1':34,'3.2':140,'3.3':18,'3.4':0,'4.1':16,'4.2':0,'4.3':2,'4.4':0,'4.5':1,'4.6':2,'4.7':14,'4.8':0,'4.9':0,'4.10':0,'4.11.1':0,'4.11.2':0,'4.11.3':0,'4.11.4':0,'4.11.5':0,'4.11.6':0,'4.12.1':0,'4.12.2':0,'4.12.3':1,'4.12.4':5,'4.12.5':0,'4.12.6':0,'4.13.1':5,'4.13.2':0,'4.13.3':1,'4.13.4':0,'4.13.5':0,'4.13.6':0,'4.13.7':0,'4.14.1':5,'4.14.2':0,'4.14.3':0,'4.14.4':0,'4.15.1':5,'4.15.2':1,'4.15.3':0,'4.15.4':2,'4.15.5':0,'4.15.6':0,'4.15.7':0,'5.1':0,'5.2':0,'5.3':20,'5.4':0,'5.5':0,'6.1':41,'6.2':0,'6.3':0,'6.4':0};
   const leaves=tasks.filter(t=>!t.isPhase);
   const concluidas=leaves.filter(t=>t.pct>=1);
   const andamento=leaves.filter(t=>t.pct>0&&t.pct<1&&!isAtrasada(t));
@@ -1019,6 +1017,29 @@ function syncCards(){
   document.getElementById('cnt-futuras').textContent=futuras.length;
   document.getElementById('cnt-atrasadas').textContent=atrasadas.length;
 }
+function renderTaskModal(title, list, countSuffix){
+  document.getElementById('card-modal-title').textContent=title;
+  document.getElementById('card-modal-count').textContent=list.length+(countSuffix||' tarefa(s) encontrada(s)');
+  const statusBadge=s=>s==='Concluída'?'b-green':s==='No Prazo'?'b-blue':'b-gray';
+  document.getElementById('card-modal-body').innerHTML=list.length===0
+    ?'<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2)">Nenhuma tarefa encontrada.</td></tr>'
+    :list.map(t=>`<tr>
+      <td style="font-size:10px;color:var(--text2);white-space:nowrap">${t.edt}</td>
+      <td style="max-width:220px"><strong style="font-size:12px">${t.isMarco?'◆ ':''}${t.nome}</strong>${t.obs?`<br><span style="font-size:10px;color:var(--text2)">${t.obs}</span>`:''}</td>
+      <td><span class="badge b-gray" style="font-size:10px">${t.fase}</span></td>
+      <td style="font-size:11px;min-width:90px">${t.resp||'-'}</td>
+      <td style="font-size:11px;white-space:nowrap">${t.inicio.slice(-8)}</td>
+      <td style="font-size:11px;white-space:nowrap">${t.termino.slice(-8)}</td>
+      <td style="min-width:70px">
+        <div style="display:flex;align-items:center;gap:4px">
+          <div class="prog-bar" style="width:34px"><div class="prog-fill" style="width:${Math.round(t.pct*100)}%"></div></div>
+          <span style="font-size:11px">${Math.round(t.pct*100)}%</span>
+        </div>
+      </td>
+      <td><span class="badge ${statusBadge(t.status)}">${t.status}</span></td>
+    </tr>`).join('');
+  document.getElementById('card-modal').classList.add('open');
+}
 function openCardModal(type){
   const isConcluida=t=>!t.isPhase&&t.pct>=1;
   const isAndamento=t=>!t.isPhase&&t.pct>0&&t.pct<1&&!isAtrasada(t);
@@ -1032,33 +1053,34 @@ function openCardModal(type){
   const cfg=configs[type];
   if(!cfg)return;
   const list=tasks.filter(cfg.filter);
-  document.getElementById('card-modal-title').textContent=cfg.title;
-  document.getElementById('card-modal-count').textContent=list.length+' tarefa(s) encontrada(s)';
-  const statusBadge=s=>s==='Concluída'?'b-green':s==='No Prazo'?'b-blue':'b-gray';
-  document.getElementById('card-modal-body').innerHTML=list.length===0
-    ?'<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text2)">Nenhuma tarefa encontrada.</td></tr>'
-    :list.map(t=>`<tr>
-      <td style="font-size:10px;color:var(--text2);white-space:nowrap">${t.edt}</td>
-      <td style="max-width:220px"><strong style="font-size:12px">${t.isMarco?'◆ ':''}${t.nome}</strong>${t.obs?`<br><span style="font-size:10px;color:var(--text2)">${t.obs}</span>`:''}</td>
-      <td><span class="badge b-gray" style="font-size:10px">${t.fase}</span></td>
-      <td style="font-size:11px;min-width:90px">${t.resp||'—'}</td>
-      <td style="font-size:11px;white-space:nowrap">${t.inicio.slice(-8)}</td>
-      <td style="font-size:11px;white-space:nowrap">${t.termino.slice(-8)}</td>
-      <td style="min-width:70px">
-        <div style="display:flex;align-items:center;gap:4px">
-          <div class="prog-bar" style="width:34px"><div class="prog-fill" style="width:${Math.round(t.pct*100)}%"></div></div>
-          <span style="font-size:11px">${Math.round(t.pct*100)}%</span>
-        </div>
-      </td>
-      <td><span class="badge ${statusBadge(t.status)}">${t.status}</span></td>
-    </tr>`).join('');
-  document.getElementById('card-modal').classList.add('open');
+  renderTaskModal(cfg.title, list);
+}
+function openPhaseModal(fase){
+  const list=tasks.filter(t=>t.fase===fase&&!t.isPhase);
+  const titles={
+    'Ideação':'Fase Ideação - todas as tarefas',
+    'Telefonia':'Migração Telefonia - todas as tarefas',
+    'Planejamento':'Fase Planejamento - todas as tarefas',
+    'Execução':'Fase Execução - todas as tarefas',
+    'Implantação':'Fase Implantação - todas as tarefas',
+    'Encerramento':'Fase Encerramento - todas as tarefas'
+  };
+  // ordena por EDT numérico (suporta sub-níveis como 4.11.2)
+  const sorted=[...list].sort((a,b)=>{
+    const pa=a.edt.split('.').map(Number), pb=b.edt.split('.').map(Number);
+    for(let i=0;i<Math.max(pa.length,pb.length);i++){
+      const d=(pa[i]||0)-(pb[i]||0);
+      if(d) return d;
+    }
+    return 0;
+  });
+  renderTaskModal(titles[fase]||fase, sorted);
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 
 function exportExcel(type){
   const wb=XLSX.utils.book_new();
-  const exec=[['PASI FASE II — RESUMO EXECUTIVO'],['Gerado em:',new Date().toLocaleString('pt-BR')],[],['Pilar','% Concluído','Tarefas','Atrasadas','Saúde'],['Fase Ideação','93%',19,0,'Verde'],['Migração Telefonia','85%',4,0,'Amarelo'],['Fase Planejamento','0%',22,0,'Vermelho'],['Fase Execução','0%',47,0,'Vermelho'],['Fase Implantação','0%',6,0,'Vermelho'],['Fase Encerramento','0%',5,0,'Vermelho'],[],['GERAL','51%',105,1,'—']];
+  const exec=[['PASI FASE II - RESUMO EXECUTIVO'],['Gerado em:',new Date().toLocaleString('pt-BR')],[],['Pilar','% Concluído','Tarefas','Atrasadas','Saúde'],['Fase Ideação','88%',19,0,'Verde'],['Migração Telefonia','74%',4,0,'Amarelo'],['Fase Planejamento','0%',22,0,'Vermelho'],['Fase Execução','0%',47,0,'Vermelho'],['Fase Implantação','0%',6,0,'Vermelho'],['Fase Encerramento','0%',5,0,'Vermelho'],[],['GERAL','55%',105,1,'-']];
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(exec),'Resumo Executivo');
   const th=['EDT','Fase','Nome da Tarefa','Responsável','Início','Término','%','Status','Observação','Marco?'];
   const tr=tasks.filter(t=>!t.isPhase||t.isMarco).map(t=>[t.edt,t.fase,t.nome,t.resp,t.inicio.slice(-8),t.termino.slice(-8),Math.round(t.pct*100)+'%',t.status,t.obs,t.isMarco?'Sim':'Não']);
@@ -1080,8 +1102,8 @@ window.addEventListener('DOMContentLoaded',()=>{
     data:{
       labels:['Ideação','Migr. Tel.','Planej.','Execução','Implant.','Encerrm.'],
       datasets:[
-        {label:'Concluído',data:[93,85,0,0,0,0],backgroundColor:'#3B6D11',borderRadius:3},
-        {label:'Restante',data:[7,15,100,100,100,100],backgroundColor:'#D3D1C7',borderRadius:3}
+        {label:'Concluído',data:[88,74,0,0,0,0],backgroundColor:'#3B6D11',borderRadius:3},
+        {label:'Restante',data:[12,26,100,100,100,100],backgroundColor:'#D3D1C7',borderRadius:3}
       ]
     },
     options:{
